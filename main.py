@@ -1,6 +1,7 @@
-# ensure you have Python (3  or latest)
+ # ensure you have Python (3  or latest)
 # ensure you have pip installer
 import requests 
+import csv 
 from bs4 import BeautifulSoup 
 # L'url du site que je souhaite Scraper
 baseUrl = 'https://www.stage.fr/'
@@ -57,7 +58,6 @@ def addBaseUrl(baseUrl, urls):
         res.append(url)
     return res
 
-
 #Execution
 urls = []
 for link in getLinks(baseUrl + uri, 1):
@@ -65,6 +65,23 @@ for link in getLinks(baseUrl + uri, 1):
     urls.extend(addBaseUrl(baseUrl, swoup(link, getEndpoints)))
     for url_link in urls:    
         print("Voici les liens des stages :",url_link)
-
-def get_info(url_link)
-    
+        # récupération des informations
+        # On vérifie si on peut se connecter à la page 
+        # swoup(url_link, process)
+        
+        # headers = ['id', "category", "link"]
+        
+        # rows = []
+        # with open('linkList.csv', "w", newline='' ) as file: 
+        #     writer = csv.DictWriter(file, fieldnames=headers)
+        #     writer.writeheader()
+        #     for row in rows: 
+        #         writer.writerow(row)
+        
+        
+        # for i in range(urls): 
+        #     rows.append({
+        #         "id" : i,
+        #         "category" : "None",
+        #         "link" : urls[i]
+        #     })
