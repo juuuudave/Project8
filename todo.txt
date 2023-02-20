@@ -1,0 +1,5 @@
+todo list : 
+-> et écrire ce que l'on a trouvé dans un fichier .csv
+-> nettoyer les données
+-> réorganiser le code avec des functions
+-> publier sur git
