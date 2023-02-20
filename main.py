@@ -80,8 +80,19 @@ def getInformations(soup):
             for tab in tabs: 
                 # print(tab)
                 name = tab.find('div', {"class": "accordeon-header"})
-                print(name.getText)
+                # print(name.getText)
                 coord = tab.find('div', {"class": "accordeon-body"})
+                adress = coord.find("p")
+
+                try:
+                    adress = adress.getText()
+                    cleanAdress = []
+                    for ele in str(adress).split("\n"):
+                        if ele.strip() is not "":
+                            cleanAdress = adress
+                except: 
+                    # mettre les variables vide comme ceci 'adress' : ""
+
                 fiche = {
                     "title" : title.replace("mettre ce qu'il faut", ""),
                     "parution_date" : date_parution,
@@ -90,8 +101,11 @@ def getInformations(soup):
                 }
                 fiche.append()
                 return fiche
+                
     print("VOICI LE TITRE DU STAGE",title_stages)
     exit()
+
+def tryToCleanOrReturnBlank:
 
 
 # On fait un tableau vide de toutes les urls
