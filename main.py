@@ -83,26 +83,15 @@ def getInformations(soup):
                 print(name.getText)
                 coord = tab.find('div', {"class": "accordeon-body"})
                 fiche = {
-                    "title" : title,
+                    "title" : title.replace("mettre ce qu'il faut", ""),
                     "parution_date" : date_parution,
                     "adress" : adress,
                     "number" : number
                 }
+                fiche.append()
                 return fiche
     print("VOICI LE TITRE DU STAGE",title_stages)
     exit()
-
-
-    # on créer un tableau vide pour contenir toutes nos informations du scrapping
-    # informations = []
-    # for article in articles:
-    #     a = article.find('a')
-    #     try: 
-    #         informations.append(a['href'])
-    #     except:
-    #         print(article)
-    #         print('ERROR: No link')
-    # return informations
 
 
 # On fait un tableau vide de toutes les urls
