@@ -1,9 +1,9 @@
 import csv
 
-# with open('personnes.csv', 'r') as file:
-#     reader = csv.DictReader(file)
-#     for row in reader:
-#         print(row["email"])
+with open('personnes.csv', 'r') as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        print(row["email"])
 
 rows = []
 for i in range(200):
@@ -15,8 +15,8 @@ for i in range(200):
 
 headers = ['id', "category", "link"]
 
-with open('linkList.csv', "w", newline='' ) as file: 
+with open('linkList.csv', "w", newline='' ) as file:
     writer = csv.DictWriter(file, fieldnames=headers)
     writer.writeheader()
-    for row in rows: 
+    for row in rows:
         writer.writerow(row)

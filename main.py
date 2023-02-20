@@ -1,4 +1,5 @@
 import yaml
+import time
 import requests 
 import csv 
 from bs4 import BeautifulSoup 
@@ -68,35 +69,29 @@ def addBaseUrl(baseUrl, urls):
     return res
 
 
-# Fonction pour la partie endpoints si on peut récupérer des informations
-def swoup_information(url_link, process_information) :
-    # Instanciation de mon proxy
-    response = requests.get(url_link)
-    # print("la page est ", response)
-    # si mon site renvoie un code HTTP 200 (OK)
-    if response.ok:
-        # je parse le contenue html de ma page 
-        dosoup = BeautifulSoup(response.text, 'html.parser')
-        try:
-            # Je retourne l'execution de ma fonction process prenant ma SWOUP SWOUP en paramètre
-            # print(process_information(dosoup))
-            return process_information(dosoup)
-            
-        
-        except Exception:
-            print("ERROR: Impossible to process ! " )
-    
-    else:
-        print("ERROR: Failed Connect")
-    return
-
-
 # Fonction qui permet de "scrapper" sur le site et récuperer tous les information sur les pages visées
-def getInformations(dosoup):
-    div = dosoup.find('div', {"class": "container"})
+def getInformations(soup):
+    div = soup.find('div', {"class": "container"})
     # pour le titre du stage
-    title_stage = div.find('h1', {"class": "details-header__title"})
-    print("VOICI LE TITRE DU STAGE",title_stage)
+    title_stages = div.find('h1', {"class": "details-header__title"})
+    if title_stages is not None:
+        tabs = title_stages.findAll("li", {"class": "accordeon-item"}) # ex du prof
+        if tabs is not None:
+            for tab in tabs: 
+                # print(tab)
+                name = tab.find('div', {"class": "accordeon-header"})
+                print(name.getText)
+                coord = tab.find('div', {"class": "accordeon-body"})
+                fiche = {
+                    "title" : title,
+                    "parution_date" : date_parution,
+                    "adress" : adress,
+                    "number" : number
+                }
+                return fiche
+    print("VOICI LE TITRE DU STAGE",title_stages)
+    exit()
+
 
     # on créer un tableau vide pour contenir toutes nos informations du scrapping
     # informations = []
@@ -120,7 +115,7 @@ for link in getLinks(baseUrl + uri, 1):
         print("Voici les liens des stages :",url_link)
         # récupération des informations
         # On vérifie si on peut se connecter à la page 
-        swoup_information(url_link, getInformations)
+        swoup(url_link, getInformations)
 
 
 
