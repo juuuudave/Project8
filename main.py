@@ -88,7 +88,7 @@ def getInformations(soup):
                     adress = adress.getText()
                     cleanAdress = []
                     for ele in str(adress).split("\n"):
-                        if ele.strip() is not "":
+                        if ele.strip() != "":
                             cleanAdress = adress
                 except: 
                     # mettre les variables vide comme ceci 'adress' : ""
@@ -101,11 +101,14 @@ def getInformations(soup):
                 }
                 fiche.append()
                 return fiche
-                
+
     print("VOICI LE TITRE DU STAGE",title_stages)
     exit()
 
-def tryToCleanOrReturnBlank:
+# def tryToCleanOrReturnBlank:
+
+
+
 
 
 # On fait un tableau vide de toutes les urls
