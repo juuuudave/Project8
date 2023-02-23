@@ -4,17 +4,14 @@ import requests
 import csv 
 from bs4 import BeautifulSoup 
 
-# on ouvre le fichier contenant tous les headers
-with open("headers.yml") as f_headers:
-    browser_headers = yaml.safe_load(f_headers)
-browser_headers["Firefox"]
+# import proxies 
 
 # L'url du site que je souhaite Scraper
 baseUrl = 'https://www.stage.fr/'
 uri = "jobs/?q=stage%20Cybersecurité&p="
 
 
-#Genere des liens avec l'argument "page" qui s'incrémente
+#Génère des liens avec l'argument "page" qui s'incrémente
 def getLinks(url, nbPg):
     # initialisation du resultat (vide pour l'instant)
     urls = []
@@ -36,6 +33,7 @@ def swoup(url, process):
             return process(soup)
             
         except Exception:
+            # impossible d'aller à la page demandée
             print("ERROR: Impossible to process ! " )
     
     else:
@@ -69,45 +67,40 @@ def addBaseUrl(baseUrl, urls):
     return res
 
 
-# Fonction qui permet de "scrapper" sur le site et récuperer tous les information sur les pages visées
+# Fonction qui permet de "scrapper" sur le site et récupérer tous les information sur les pages visées
 def getInformations(soup):
-    div = soup.find('div', {"class": "container"})
     # pour le titre du stage
-    title_stages = div.find('h1', {"class": "details-header__title"})
-    if title_stages is not None:
-        tabs = title_stages.findAll("li", {"class": "accordeon-item"}) # ex du prof
-        if tabs is not None:
-            for tab in tabs: 
-                # print(tab)
-                name = tab.find('div', {"class": "accordeon-header"})
-                # print(name.getText)
-                coord = tab.find('div', {"class": "accordeon-body"})
-                adress = coord.find("p")
+    title_stages = soup.find('h1', {"class": "details-header__title"})
+    title = title_stages.getText()
 
-                try:
-                    adress = adress.getText()
-                    cleanAdress = []
-                    for ele in str(adress).split("\n"):
-                        if ele.strip() != "":
-                            cleanAdress = adress
-                except: 
-                    # mettre les variables vide comme ceci 'adress' : ""
+    # on vérifie si les informations ne sont pas vide
+    if title is not None:
+        ul = soup.find("ul", {"class": "clearfix"}) # ex du prof
+        
+        name = ul.findAll("li", {"class": "listing-item__info--item-company"})
+        print(name.getText)
+        exit()
+        try:
+            address = address.getText()
+            cleanAdress = []
+            for ele in str(address).split("\n"):
+                if ele.strip() != "":
+                    cleanAdress = address
+        except:
+            # mettre les variables vide comme ceci 'adress' : ""
+            print('no possible')
 
-                fiche = {
-                    "title" : title.replace("mettre ce qu'il faut", ""),
-                    "parution_date" : date_parution,
-                    "adress" : adress,
-                    "number" : number
-                }
-                fiche.append()
-                return fiche
-
-    print("VOICI LE TITRE DU STAGE",title_stages)
-    exit()
+            # fiche = {
+            #     "title" : title.replace("mettre ce qu'il faut", ""),
+            #     "parution_date" : date_parution,
+            #     "adress" : adress,
+            #     "number" : number
+            # }
+            # fiche.append()
+            # return fiche
+            print("VOICI LE TITRE DU STAGE",title_stages)
 
 # def tryToCleanOrReturnBlank:
-
-
 
 
 
@@ -122,6 +115,7 @@ for link in getLinks(baseUrl + uri, 1):
         # récupération des informations
         # On vérifie si on peut se connecter à la page 
         swoup(url_link, getInformations)
+        time.sleep
 
 
 
