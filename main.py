@@ -72,36 +72,38 @@ def getInformations(soup):
     # pour le titre du stage
     title_stages = soup.find('h1', {"class": "details-header__title"})
     title = title_stages.getText()
-
+    # print(title)
+    
     # on vérifie si les informations ne sont pas vide
     if title is not None:
         ul = soup.find("ul", {"class": "clearfix"}) # ex du prof
-        
-        name = ul.findAll("li", {"class": "listing-item__info--item-company"})
-        print(name.getText)
-        exit()
-        try:
-            address = address.getText()
-            cleanAdress = []
-            for ele in str(address).split("\n"):
-                if ele.strip() != "":
-                    cleanAdress = address
-        except:
-            # mettre les variables vide comme ceci 'adress' : ""
-            print('no possible')
 
-            # fiche = {
-            #     "title" : title.replace("mettre ce qu'il faut", ""),
-            #     "parution_date" : date_parution,
-            #     "adress" : adress,
-            #     "number" : number
-            # }
-            # fiche.append()
-            # return fiche
-            print("VOICI LE TITRE DU STAGE",title_stages)
+        name = ul.find("li", {"class": "listing-item__info--item-company"}).getText()
+        address = ul.find("li", {"class": "listing-item__info--item-location"}).getText()
+        date = ul.find("li", {"class": "listing-item__info--item-date"}).getText()
 
+        # try:
+            
+        #     cleanAddress = []
+        #     for ele in str(address).split("\n"):
+        #         if ele.strip() != "":
+        #             cleanAddress = address
+
+        # except:
+        #     # mettre les variables vide comme ceci 'address' : ""
+        #     fiche = {
+        #         "title" : title.replace("mettre ce qu'il faut", ""),
+        #         "parution_date" : date,
+        #         "address" : address,
+        #         "name" : name
+        #     }
+
+        #     fiche.append()
+        #     print(fiche)
+        #     return fiche
+
+# fonction pour clean les infos erroné
 # def tryToCleanOrReturnBlank:
-
 
 
 # On fait un tableau vide de toutes les urls
@@ -115,7 +117,7 @@ for link in getLinks(baseUrl + uri, 1):
         # récupération des informations
         # On vérifie si on peut se connecter à la page 
         swoup(url_link, getInformations)
-        time.sleep
+        # time.sleep()
 
 
 
