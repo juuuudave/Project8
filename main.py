@@ -1,4 +1,3 @@
-import yaml
 import time
 import requests 
 import csv 
@@ -12,7 +11,7 @@ uri = "jobs/?q=stage%20cybersécurité&p="
 
 
 #Génère des liens avec l'argument "page" qui s'incrémente
-def getLinks(url, nbPg=0):
+def getLinks(url, nbPg=1):
     # initialisation du resultat (vide pour l'instant)
     urls = []
     # Pour chaque page
@@ -24,7 +23,7 @@ def getLinks(url, nbPg=0):
 def swoup(url, process):
     # Instanciation de mon proxy
     response = requests.get(url)
-    # si mon site renvoie un code HTTP 200 (OK)
+    time.sleep(5)
     if response.ok:
         # je parse le contenue html de ma page 
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -38,8 +37,9 @@ def swoup(url, process):
     
     else:
         print("ERROR: Failed Connect")
-        pass
-    return
+
+
+    return []
 
 
 # Fonction qui permet de "crawler" sur le site et recuperer tous les liens sur la page visée
@@ -88,15 +88,15 @@ def getInformations(soup):
                     
                     # création d'une list ayant toutes les informations de la page
                     fiche = { 
-                        "title": title, 
-                        "parution_date": date,
-                        "address": address,
-                        "name":name,
+                        "title": title.strip(),
+                        "parution_date": date.strip(),
+                        "address": address.strip(),
+                        "name":name.strip(),
                         }
-                    fiches.extend(fiche)
                     
+                    fiches.append(fiche)
 
-    return fiche
+    return fiches
 
 
 # fonction pour lire un fichier
@@ -107,14 +107,6 @@ def fileReader(file):
         for line in reader:
            result.append(line) 
     return result
-
-# fonction pour écrire dans un fichier
-def fileWriter(file, fieldnames, data):
-    with open(file, 'w', encoding='UTF8', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(data)
-    print("l'url à été écrite")
     
 
 # fonction pour clean les infos erronés
@@ -134,7 +126,15 @@ for link in getLinks(baseUrl + uri, 1):
     # on ajoute les urls dans le tableau
     urls.extend(addBaseUrl(baseUrl, swoup(link, getEndpoints)))
 
+# catégorie du fichier 
+headers = ["id", "category", "link"]
+# en-tête du fichier
+headers_infos = ["title", "name", "address", "parution_date"]
+
+lignes = []
+
 for url_link in urls:
+    
     rows = []
     for i in range(len(urls)):
         rows.append({
@@ -143,12 +143,9 @@ for url_link in urls:
             "link": urls[i]
         })
         
-    # catégorie du fichier 
-    headers = ["id", "category", "link"]
-    
-    # On ouver le fichier et on écrit les endpoints dedans 
-    with open('linkListStage.csv', "w", encoding='UTF8' ,newline='') as file:
-        writer = csv.DictWriter(file, fieldnames=headers)
+    # On ouvre le fichier et on écrit les endpoints dedans 
+    with open('linkListStage.csv', "w", encoding='UTF8' ,newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=headers)
         writer.writeheader()
         for row in rows:
             writer.writerow(row)
@@ -156,16 +153,15 @@ for url_link in urls:
     # On affiche les liens
     print("Voici les liens des stages :", url_link)
 
-    # Récupération des informations
-    # On vérifie si on peut se connecter à la page 
-    swoup(url_link, getInformations)
 
-    lignes = []
-    
-    for link in fileReader('linkListStage.csv'):
-        lignes.extend(swoup(url_link, getInformations))
+    fileReader('linkListStage.csv')
 
-    # en-tête du fichier
-    headers_infos = ["title", "name", "address", "date"]
+    lignes.extend(swoup(url_link, getInformations))
+
     # on écrit dans le fichier .csv
-    fileWriter('infoPages.csv', headers_infos, lignes)
+    # On ouvre le fichier et on écrit les endpoints dedans 
+    with open('infoPages.csv', "w", encoding='UTF8' ,newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=headers_infos)
+        writer.writeheader()
+        for i in range(len(lignes)):
+            writer.writerow(lignes[i])
